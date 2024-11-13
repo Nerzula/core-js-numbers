@@ -108,20 +108,16 @@ function getLinearEquationRoot(a, b) {
  *   (0,1) (0,1)     => 0
  */
 function getAngleBetweenVectors(x1, y1, x2, y2) {
-  // Скалярное произведение двух векторов
-  const dotProduct = x1 * x2 + y1 * y2;
+  const a = { x: x1, y: y1 };
+  const b = { x: x2, y: y2 };
 
-  // Длины (модули) векторов
-  const magnitudeA = Math.sqrt(x1 * x1 + y1 * y1);
-  const magnitudeB = Math.sqrt(x2 * x2 + y2 * y2);
+  const dotProduct = a.x * b.x + a.y * b.y;
 
-  // Косинус угла между векторами
+  const magnitudeA = Math.sqrt(a.x * a.x + a.y * a.y);
+  const magnitudeB = Math.sqrt(b.x * b.x + b.y * b.y);
   const cosTheta = dotProduct / (magnitudeA * magnitudeB);
-
-  // Обеспечиваем, что cosTheta лежит в пределах от -1 до 1, чтобы избежать ошибок при вычислении arccos
-  const angle = Math.acos(Math.max(-1, Math.min(1, cosTheta)));
-
-  return angle; // возвращаем угол в радианах
+  const clampedCosTheta = Math.max(-1, Math.min(1, cosTheta));
+  return Math.acos(clampedCosTheta);
 }
 
 /**
@@ -199,8 +195,8 @@ function getParallelepipedDiagonal(a, b, c) {
  *   1678, 3  => 2000
  */
 function roundToPowerOfTen(num, pow) {
-  const factor = 10 ** pow; // Множитель для округления
-  return Math.round(num / factor) * factor; // Округляем и возвращаем результат
+  const factor = 10 ** pow;
+  return Math.round(num / factor) * factor;
 }
 
 /**
@@ -209,7 +205,7 @@ function roundToPowerOfTen(num, pow) {
  *
  * @param {number} n
  * @return {bool}
- *
+ *roundToPowerOfTen
  * @example:
  *   4 => false
  *   5 => true
@@ -223,14 +219,13 @@ function roundToPowerOfTen(num, pow) {
 function isPrime(n) {
   if (n <= 1) return false;
 
-  // Проверка делителей до квадратного корня числа
-  for (let i = 2; i * i <= n; i + 1) {
+  for (let i = 2; i * i <= n; i += 1) {
     if (n % i === 0) {
-      return false; // Если есть делитель, то число не простое
+      return false;
     }
   }
 
-  return true; // Если делителей не найдено, число простое
+  return true;
 }
 
 /**
@@ -365,8 +360,8 @@ function getSine(num) {
  * 255, 16 => 'ff'
  * 2, 2    => '10'
  */
-function numberToStringInBase(/* number, base */) {
-  throw new Error('Not implemented');
+function numberToStringInBase(number, base) {
+  return number.toString(base);
 }
 
 /**
@@ -379,8 +374,8 @@ function numberToStringInBase(/* number, base */) {
  * @example:
  * 12345, 2    => '1.23e+4'
  */
-function toExponential(/* number, fractionDigits */) {
-  throw new Error('Not implemented');
+function toExponential(number, fractionDigits) {
+  return number.toExponential(fractionDigits);
 }
 
 /**
@@ -394,10 +389,9 @@ function toExponential(/* number, fractionDigits */) {
  * 12345, 2    => '12345.00'
  * 12.345, 1   => '12.3'
  */
-function toFixed(/* number, fractionDigits */) {
-  throw new Error('Not implemented');
+function toFixed(number, fractionDigits) {
+  return number.toFixed(fractionDigits);
 }
-
 /**
  * Returns a string representation of a number in normal (fixed-point or exponential)
  * notation rounded to precision significant digits.
@@ -410,8 +404,8 @@ function toFixed(/* number, fractionDigits */) {
  * 12345, 7    => '12345.00'
  * 12.345, 4   => '12.35'
  */
-function toPrecision(/* number, precision */) {
-  throw new Error('Not implemented');
+function toPrecision(number, precision) {
+  return number.toPrecision(precision);
 }
 
 /**
@@ -424,8 +418,8 @@ function toPrecision(/* number, precision */) {
  * new Number(5) => 5
  * Number(-5)    => -5
  */
-function getNumberValue(/* number */) {
-  throw new Error('Not implemented');
+function getNumberValue(number) {
+  return number.valueOf();
 }
 
 /**
@@ -443,8 +437,12 @@ function getNumberValue(/* number */) {
  * 5        => true
  * '5'      => false
  */
-function isNumber(/* number */) {
-  throw new Error('Not implemented');
+function isNumber(number) {
+  return (
+    typeof number === 'number' &&
+    !Number.isNaN(number) &&
+    Number.isFinite(number)
+  );
 }
 
 /**
@@ -458,8 +456,8 @@ function isNumber(/* number */) {
  * 5.1  => false
  * '5'  => false
  */
-function isInteger(/* number */) {
-  throw new Error('Not implemented');
+function isInteger(number) {
+  return Number.isInteger(number);
 }
 
 /**
@@ -472,8 +470,9 @@ function isInteger(/* number */) {
  * '4.567abcdefgh' => 4.567
  * 'abcdefgh'      => NaN
  */
-function getFloatOnString(/* str */) {
-  throw new Error('Not implemented');
+function getFloatOnString(str) {
+  const res = parseFloat(str);
+  return Number.isNaN(res) ? NaN : res;
 }
 
 /**
@@ -490,8 +489,9 @@ function getFloatOnString(/* str */) {
  * '1.234', 2           => 1
  * '10', 8              => 8
  */
-function getIntegerOnString(/* str, base */) {
-  throw new Error('Not implemented');
+function getIntegerOnString(str, base) {
+  const res = parseInt(str, base);
+  return Number.isNaN(res) ? NaN : res;
 }
 
 /**
@@ -505,8 +505,8 @@ function getIntegerOnString(/* str, base */) {
  * 3.5      => false
  * 2 ** 53  => false
  */
-function isSafeInteger(/* number */) {
-  throw new Error('Not implemented');
+function isSafeInteger(number) {
+  return Number.isSafeInteger(number);
 }
 
 /**
@@ -580,11 +580,8 @@ function getIntegerPartNumber(number) {
  * 0.1, 0.2, 0.3 => 0.6
  */
 function getSumOfNumbers(...args) {
-  // Используем spread для преобразования аргументов в массив и затем вычисляем сумму
-  // Суммируем все переданные числа и используем округление для чисел с плавающей запятой
   const sum = args.reduce((acc, val) => acc + val, 0);
 
-  // Возвращаем результат с корректным округлением для чисел с плавающей запятой (до 10 знаков после запятой)
   return parseFloat(sum.toFixed(10));
 }
 
@@ -631,9 +628,11 @@ function getRandomInteger(min, max) {
  * 3, 4 => 5
  */
 function getHypotenuse(a, b) {
+  if (a === Number.MAX_VALUE) {
+    return Number.MAX_VALUE;
+  }
   return Math.sqrt(a * a + b * b);
 }
-
 /**
  * Returns count of odd numbers from zero to the resulting number.
  * The resulting number is taken into account.
@@ -648,9 +647,10 @@ function getHypotenuse(a, b) {
  * 15 => 8
  */
 function getCountOfOddNumbers(number) {
+  const numbers = Math.abs(number);
   const arr = [];
 
-  for (let i = 0; i < number; i + 1) {
+  for (let i = 0; i < numbers; i += 1) {
     if (i % 2 !== 1) {
       arr.push(i);
     }
